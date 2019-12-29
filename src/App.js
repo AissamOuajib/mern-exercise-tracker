@@ -25,7 +25,7 @@ function App() {
       <div  className='container'>
         <Route path='/user' exact component={CreateUser}/>
       </div>
-    </Router>
+    </Router> 
   );
 }
 
