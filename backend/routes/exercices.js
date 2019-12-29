@@ -18,7 +18,26 @@ router.route('/add').post((req, res) => {
         date: date,
     });
 
-    newExercise.save().then(() => res.json('Exercise added!')).catch(err => res.json('Error: '+err));
+    newExercise.save().then(() => res.json('Exercise added!')).catch(err => res.status(400).json('Error: '+err));
+});
+
+router.route('/:id').get((req, res) => {
+    Exercise.findById(req.params.id).then(exrecice => res.json(exrecice)).catch(err => res.status(400).json('Error: '+err));
+});
+
+router.route('/:id').delete((req, res) => {
+    Exercise.findByIdAndDelete(req.params.id).then(() => res.json('Exercise Deleted!')).catch(err => res.status(400).json('Error: '+err));
+});
+
+router.route('/update/:id').post((req, res) => {
+    Exercise.findByIdAndUpdate(req.params.id).then(exercice => {
+        exercice.username = req.body.username;
+        exercice.description = req.body.description;
+        exercice.duration = Number(req.body.duration);
+        exercice.date = Date.parse(req.body.date);
+
+        exercice.save().then(() => res.json('Exercice Updated!')).catch(err => res.status(400).json('Error :'+err));
+    }).catch(err => res.status(400).json('Error: '+err));
 });
 
 module.exports = router;
