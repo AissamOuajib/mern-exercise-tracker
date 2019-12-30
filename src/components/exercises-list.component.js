@@ -1,41 +1,41 @@
 import React, { Component } from 'react';
-import {Link} from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import axios from 'axios';
 
 
 export default class ExercisesList extends Component {
-    constructor(props){
+    constructor(props) {
         super(props);
-
-        this.deleteExercie = this.deleteExercie.bind(this);
-
+        
+        this.deleteExercise = this.deleteExercise.bind(this)
+        
         this.state = {exercises: []};
     }
-
-    componentDidMount(){
-        axios.get('http://localhost:5000/exercises/').then(res => {
-            if(res.data.length > 0)
-                this.setState({exercises: res.data});
-        }).catch(err => console.log(err));
-    }
-
-    deleteExercie(id){
-        axios.delete('http://localhost:5000/exercises/'+id).then(res => {
-            console.log(res.data);
-            this.setState(currentState => {
-                return {
-                    exercises: currentState.exersices.filter(el => el._id !== id),
-                }
-            });
-        }).catch(err => console.log(err));
-    }
-
-    exerciseList() {
-        return this.state.exercises.map(exercise => {
-            return <Exercise exercise={exercise} deleteExercise={this.deleteExercise} key={exercise._id}/>;
+    
+    componentDidMount() {
+        axios.get('http://localhost:5000/exercises/').then(response => {
+            this.setState({ exercises: response.data })
+        }).catch((error) => {
+            console.log(error);
         });
     }
-
+    
+    deleteExercise(id) {
+        axios.delete('http://localhost:5000/exercises/'+id).then(response => { console.log(response.data)}).catch((error) => {
+            console.log(error);
+        });
+        
+        this.setState({
+            exercises: this.state.exercises.filter(el => el._id !== id),
+        });
+    }
+    
+    exerciseList() {
+        return this.state.exercises.map(currentexercise => {
+            return <Exercise exercise={currentexercise} deleteExercise={this.deleteExercise} key={currentexercise._id}/>;
+        });
+    }
+    
     render() {
         return (
             <div>
@@ -58,6 +58,7 @@ export default class ExercisesList extends Component {
         );
     }
 }
+
 
 const Exercise = props => (
     <tr>
